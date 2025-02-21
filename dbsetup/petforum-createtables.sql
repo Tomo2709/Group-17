@@ -1,3 +1,6 @@
+CREATE DATABASE petdb;
+USE petdb;
+
 drop table IF EXISTS posts;
 drop table IF EXISTS threads;
 drop table IF EXISTS boards;
