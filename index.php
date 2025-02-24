@@ -34,14 +34,14 @@ getHeader("PetForum");
 
             while ($stmt -> fetch())
             {
-              echo "<a href=''>$title</a><br>";
+              echo "<h5><a href='threads.php?board=$boardID'>$title</a></h5><br>";
             }
 
             $stmt -> free_result();
             $stmt -> close();
           }
       ?>
-      <a href="" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all Boards</a>
+      <a href="boards.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all Boards</a>
       </div>
 
     <div class="col-sm-4">
@@ -63,7 +63,7 @@ getHeader("PetForum");
               $stmt -> close();
           }
         ?>
-      <a href="" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all recent posts</a>
+      <a href="recent.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all recent posts</a>
     </div>
 
     <!-- log in stuff right here -->
