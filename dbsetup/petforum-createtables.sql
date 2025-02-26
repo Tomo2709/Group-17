@@ -14,15 +14,6 @@ create table users(
     password VARCHAR(255) NOT NULL,
     CONSTRAINT pri_user PRIMARY KEY(user_id));
     
-create table pets(
-	pet_id INT NOT NULL AUTO_INCREMENT,
-    owner INT NOT NULL,
-    species VARCHAR(50) NULL,
-    breed VARCHAR(50) NULL,
-    age INT NULL,
-    gender VARCHAR(10) NULL,
-    CONSTRAINT pri_pet PRIMARY KEY(pet_id),
-    CONSTRAINT for_pet FOREIGN KEY(owner) REFERENCES users(user_id));
 
 create table boards(
 	board_id INT NOT NULL AUTO_INCREMENT,
@@ -50,6 +41,12 @@ create table posts(
     CONSTRAINT for_thr FOREIGN KEY(thread) REFERENCES threads(thread_id),
     CONSTRAINT for_authP FOREIGN KEY(author) REFERENCES users(user_id));
     
-    
+INSERT INTO `users`(`username`, `email`, `password`) VALUES ("test","t@t.t","test");
+
+INSERT INTO `boards`(`title`) VALUES ("cat"),("dog"),("hamster"),("fish"),("snake"),("lizard");
+
+INSERT INTO `threads`(`title`,`board`,`author`,`created`) VALUES ("this is about cats", 1, 1, "2025-02-26");
+
+INSERT INTO `posts`(`thread`,`author`,`created`,`message`) VALUES (1,1,"2025-02-26","CAT!");
 
 

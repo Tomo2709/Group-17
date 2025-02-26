@@ -36,7 +36,7 @@ $user = 1;
               echo "
               <div class=container>
               <div class='card mb-4 box-shadow'>
-                <img class='card-img-top' data-src='$image' data-holder-rendered='true'>
+                <img class='card-img-top' src='../images/$image' data-holder-rendered='true' style='width: 250px;height : 250px;'>
                 <div class='card-body'>
                   <p class='card-text'>$username: $message</p>
                     <small class='text-muted'>$created</small>
@@ -56,7 +56,7 @@ $user = 1;
 <!-- form for creating a post -->
 <div class="col-sm-4">
       <h3>create post</h3>
-        <form method="POST" onkeydown="return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
+        <form method="POST" enctype="multipart/form-data" return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
 
           <div class="form-group">
             <label for="message">message:</label>
