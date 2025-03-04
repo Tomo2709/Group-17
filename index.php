@@ -47,8 +47,8 @@ getHeader("PetForum");
     <div class="col-sm-4">
       <h3>Recent activity</h3>
         <?php
-          // get recent posts ordered by date created
-          if ($stmt = $GLOBALS['database'] -> prepare("SELECT  `threads`.`title`, `users`.`username`, `posts`.`message`, `posts`.`created` FROM `posts` INNER JOIN `threads` ON `posts`.`thread` = `threads`.`thread_id` INNER JOIN `users` ON `posts`.`author` = `users`.`user_id` ORDER BY  `posts`.`created` LIMIT 5"))
+          // get recent posts order by post_id
+          if ($stmt = $GLOBALS['database'] -> prepare("SELECT  `threads`.`title`, `users`.`username`, `posts`.`message`, `posts`.`created` FROM `posts` INNER JOIN `threads` ON `posts`.`thread` = `threads`.`thread_id` INNER JOIN `users` ON `posts`.`author` = `users`.`user_id` ORDER BY  `posts`.`post_id` ASC LIMIT 5"))
           {
               $stmt -> execute();
               $stmt -> bind_result($threadTitle, $author, $message, $created);
