@@ -1,6 +1,18 @@
 <?php
+try{
 getHeader("PetForum");
 $boardID = $_GET["board"];
+if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `boards` WHERE `board_id`= $boardID ")){
+  $stmt ->execute();
+  $stmt ->bind_result($boardID, $title);
+  $stmt ->store_result();
+}
+if($stmt-> num_rows == 0){
+    header("Location: ../error.php");
+    exit();
+}
+
+
 $user = 1;
 ?>
 
@@ -18,7 +30,7 @@ $user = 1;
     }
     
    ?></p>
-   <h1>Board : <?php echo $boardID; ?>
+   <h1>Board : <?php echo "$title"; ?>
 </div>
 
 <div class="container">
@@ -59,5 +71,10 @@ $user = 1;
 <?php
 
 getFooter();
+        }
+catch(Exception){
+  header("Location: ../error.php");
+  exit();
+}
 
 ?>

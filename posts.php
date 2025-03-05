@@ -1,6 +1,17 @@
 <?php
+try{
 getHeader("PetForum");
 $threadID = $_GET["thread"];
+if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `threads` WHERE `thread_id`= $threadID ")){
+  $stmt ->execute();
+  $stmt ->bind_result($threadID, $title, $board, $author, $created);
+  $stmt ->store_result();
+}
+if($stmt-> num_rows == 0){
+    header("Location: ../error.php");
+    exit();
+}
+
 $user = 1;
 
 ?>
@@ -19,7 +30,7 @@ $user = 1;
     }
     
    ?></p>
-   <h1>thread : <?php echo $threadID; ?></h1>
+   <h1>thread : <?php echo $title; ?></h1>
 </div>
 
 <div class="container">
@@ -76,5 +87,9 @@ $user = 1;
 <?php
 
 getFooter();
-
+}
+catch(Exception){
+    header("Location: ../error.php");
+    exit();
+}
 ?>
