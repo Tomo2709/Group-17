@@ -1,24 +1,18 @@
 <?php
 try{
 getHeader("PetForum");
-$threadID = $_GET["thread"];
+
+// sanatize user input
+$threadID = htmlspecialchars($_GET["thread"]);
+
 if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `threads` WHERE `thread_id`= $threadID ")){
   $stmt ->execute();
   $stmt ->bind_result($threadID, $title, $board, $author, $created);
   $stmt ->store_result();
-}
-if($stmt-> num_rows == 0){
-    header("Location: ../error.php");
-    exit();
-}
-
-$user = 1;
-
-?>
-
-<div class="jumbotron text-center">
-  <h1>posts</h1>
-  <p>Logged in as: <?php
+  while ($stmt -> fetch()){
+    echo '<div class="jumbotron text-center">
+    <h1>Posts</h1>
+    <p>Logged in as: ';
 
     if (isset($_SESSION['id']))
     {
@@ -28,10 +22,19 @@ $user = 1;
     {
       echo "Guest";
     }
-    
-   ?></p>
-   <h1>thread : <?php echo $title; ?></h1>
-</div>
+
+    echo '</p> <h1>Thread : '. $title . '</div>';
+  }
+}
+
+if($stmt-> num_rows == 0){
+    header("Location: ../error.php");
+    exit();
+}
+
+$user = 1;
+
+?>
 
 <div class="container">
       <?php

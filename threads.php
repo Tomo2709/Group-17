@@ -1,24 +1,20 @@
 <?php
 try{
 getHeader("PetForum");
-$boardID = $_GET["board"];
-if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `boards` WHERE `board_id`= $boardID ")){
+
+// sanatize user input
+$boardID = htmlspecialchars($_GET["board"]);
+
+// check to see if the ID exists
+if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `boards` WHERE `board_id`=?")){
+  $stmt ->bind_param("s", $boardID);
   $stmt ->execute();
   $stmt ->bind_result($boardID, $title);
   $stmt ->store_result();
-}
-if($stmt-> num_rows == 0){
-    header("Location: ../error.php");
-    exit();
-}
-
-
-$user = 1;
-?>
-
-<div class="jumbotron text-center">
-  <h1>Threads</h1>
-  <p>Logged in as: <?php
+  while ($stmt -> fetch()){
+    echo '<div class="jumbotron text-center">
+    <h1>Threads</h1>
+    <p>Logged in as: ';
 
     if (isset($_SESSION['id']))
     {
@@ -28,10 +24,24 @@ $user = 1;
     {
       echo "Guest";
     }
-    
-   ?></p>
-   <h1>Board : <?php echo "$title"; ?>
-</div>
+
+    echo '</p> <h1>Board : '. $title . '</div>';
+  }
+}
+
+// if not a recognised ID redirect user and quit script
+if($stmt-> num_rows == 0){
+    header("Location: ../error.php");
+    exit();
+}
+
+$stmt -> free_result();
+$stmt -> close();
+
+
+// we do not have a user login set up yet
+$user = 1;
+?>
 
 <div class="container">
       <?php

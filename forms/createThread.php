@@ -5,6 +5,10 @@ try{
   $author = $_POST["user_id"];
   $created = date("Y/m/d");
 
+  // xss patch
+  $title = htmlspecialchars($title);
+
+
   // create new thread
   if ($stmt = $GLOBALS['database'] -> prepare("INSERT INTO `threads` (`title`, `board`, `author`, `created`) VALUES (?, ?, ?, ?)"))
   {
