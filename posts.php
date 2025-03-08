@@ -5,6 +5,14 @@ getHeader("PetForum");
 // sanatize user input
 $threadID = htmlspecialchars($_GET["thread"]);
 
+try{
+  $threadIDID = (int)$threadID;
+}
+catch(Exception){
+  header("Location: ../error.php");
+  exit();
+}
+
 if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `threads` WHERE `thread_id`= $threadID ")){
   $stmt ->execute();
   $stmt ->bind_result($threadID, $title, $board, $author, $created);
@@ -39,8 +47,9 @@ $user = 1;
 <div class="container">
       <?php
         // get all posts in ascending of date created
-        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `post_id`, `threads`.`title`, `users`.`username`, `posts`.`created` , `image`, `message` FROM `posts` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `threads` ON `thread`=`threads`.`thread_id` WHERE `thread` = $threadID ORDER BY `created`" ))
+        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `post_id`, `threads`.`title`, `users`.`username`, `posts`.`created` , `image`, `message` FROM `posts` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `threads` ON `thread`=`threads`.`thread_id` WHERE `thread` = ? ORDER BY `created`" ))
           {
+            $stmt -> bind_param("s", $threadID);
             $stmt -> execute();
             $stmt -> bind_result($postID, $title, $username, $created, $image, $message);
             $stmt -> store_result();

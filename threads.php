@@ -2,8 +2,19 @@
 try{
 getHeader("PetForum");
 
-// sanatize user input
+// sanatize html characters
 $boardID = htmlspecialchars($_GET["board"]);
+
+// check if board is an integer
+try{
+  $boardID = (int)$boardID;
+}
+catch(Exception){
+  header("Location: ../error.php");
+  exit();
+}
+
+
 
 // check to see if the ID exists
 if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `boards` WHERE `board_id`=?")){
@@ -46,8 +57,9 @@ $user = 1;
 <div class="container">
       <?php
         // get all threads in ascending of date created
-        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `thread_id`, `threads`.`title`, `users`.`username`, `boards`.`title`, `created` FROM `threads` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `boards` ON `board`=`boards`.`board_id` WHERE `board` = $boardID ORDER BY `created`" ))
+        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `thread_id`, `threads`.`title`, `users`.`username`, `boards`.`title`, `created` FROM `threads` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `boards` ON `board`=`boards`.`board_id` WHERE `board` = ? ORDER BY `created`" ))
           {
+            $stmt -> bind_param("s", $boardID);
             $stmt -> execute();
             $stmt -> bind_result($threadID, $title, $username, $board, $created);
             $stmt -> store_result();
