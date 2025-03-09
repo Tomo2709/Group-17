@@ -1,9 +1,26 @@
 <?php
+// csrf token check
+$token =$_POST['_token'];
+$temp = $_SESSION['_token'];
+if ($token !== $temp){ 
+  header("Location: ../error.php");
+  exit();
+}
+
 try{
   $title = $_POST["title"];
   $board = $_POST["board"];
   $author = $_POST["user_id"];
   $created = date("Y/m/d");
+
+  // check if title is empty
+  if($title === NULL || strlen($title) <= 0){
+    getHeader("petForum");
+    // button to send user back to the page they was previously on
+    echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
+    title cannot be null</div> <a href="../threads.php?board='.htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
+    exit();
+  }
 
   // xss patch
   $title = htmlspecialchars($title);

@@ -27,6 +27,11 @@ getHeader("PetForum");
             $stmt -> bind_result($postID, $title, $username, $created, $image, $message);
             $stmt -> store_result();
 
+            // xss filtering
+            $image = htmlspecialchars($image);
+            $username = htmlspecialchars($username);
+            $message = htmlspecialchars($message);
+
             while ($stmt -> fetch())
             {
                 echo "

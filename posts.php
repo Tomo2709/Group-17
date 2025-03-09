@@ -1,105 +1,116 @@
 <?php
-try{
-getHeader("PetForum");
-
-// sanatize user input
-$threadID = htmlspecialchars($_GET["thread"]);
+// generate csrf token
+$_SESSION['_token'] = bin2hex(random_bytes(16));
 
 try{
-  $threadIDID = (int)$threadID;
-}
-catch(Exception){
-  header("Location: ../error.php");
-  exit();
-}
+  getHeader("PetForum");
 
-if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `threads` WHERE `thread_id`= $threadID ")){
-  $stmt ->execute();
-  $stmt ->bind_result($threadID, $title, $board, $author, $created);
-  $stmt ->store_result();
-  while ($stmt -> fetch()){
-    echo '<div class="jumbotron text-center">
-    <h1>Posts</h1>
-    <p>Logged in as: ';
+  // sanatize user input
+  $threadID = htmlspecialchars($_GET["thread"]);
 
-    if (isset($_SESSION['id']))
-    {
-      echo $_SESSION['username'] . " (" . $_SESSION['email'] . ")";
-    }
-    else
-    {
-      echo "Guest";
-    }
-
-    echo '</p> <h1>Thread : '. $title . '</div>';
+  // check if integer
+  try{
+    $threadID = (int)$threadID;
   }
-}
-
-if($stmt-> num_rows == 0){
+  catch(Exception){
     header("Location: ../error.php");
     exit();
-}
+  }
 
-$user = 1;
+  // check if threadID exists
+  if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `threads` WHERE `thread_id`= $threadID ")){
+    $stmt ->execute();
+    $stmt ->bind_result($threadID, $title, $board, $author, $created);
+    $stmt ->store_result();
+    while ($stmt -> fetch()){
+      echo '<div class="jumbotron text-center">
+      <h1>Posts</h1>
+      <p>Logged in as: ';
 
-?>
+      if (isset($_SESSION['id']))
+      {
+        echo $_SESSION['username'] . " (" . $_SESSION['email'] . ")";
+      }
+      else
+      {
+        echo "Guest";
+      }
 
-<div class="container">
-      <?php
-        // get all posts in ascending of date created
-        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `post_id`, `threads`.`title`, `users`.`username`, `posts`.`created` , `image`, `message` FROM `posts` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `threads` ON `thread`=`threads`.`thread_id` WHERE `thread` = ? ORDER BY `created`" ))
-          {
-            $stmt -> bind_param("s", $threadID);
-            $stmt -> execute();
-            $stmt -> bind_result($postID, $title, $username, $created, $image, $message);
-            $stmt -> store_result();
+      echo '</p> <h1>Thread : '. htmlspecialchars($title) . '</div>';
+    }
+  }
+  // if threadID doesnt exist redirect
+  if($stmt-> num_rows == 0){
+      header("Location: ../error.php");
+      exit();
+  }
 
-            while ($stmt -> fetch())
+  $user = 1;
+
+  ?>
+
+  <div class="container">
+        <?php
+          // get all posts in ascending of date created
+          if ($stmt = $GLOBALS['database'] -> prepare("SELECT `post_id`, `threads`.`title`, `users`.`username`, `posts`.`created` , `image`, `message` FROM `posts` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `threads` ON `thread`=`threads`.`thread_id` WHERE `thread` = ? ORDER BY `created`" ))
             {
-              echo "
-              <div class=container>
-              <div class='card mb-4 box-shadow'>
-                <img class='card-img-top' src='../images/$image' data-holder-rendered='true' style='width: 250px;height : 250px;'>
-                <div class='card-body'>
-                  <p class='card-text'>$username: $message</p>
-                    <small class='text-muted'>$created</small>
+              $stmt -> bind_param("s", $threadID);
+              $stmt -> execute();
+              $stmt -> bind_result($postID, $title, $username, $created, $image, $message);
+              $stmt -> store_result();
+
+              // xss filtering
+              $image = htmlspecialchars($image);
+              $username = htmlspecialchars($username);
+              $message = htmlspecialchars($message);
+
+              while ($stmt -> fetch())
+              {
+                echo "
+                <div class=container>
+                <div class='card mb-4 box-shadow'>
+                  <img class='card-img-top' src='../images/$image' data-holder-rendered='true' style='width: 250px;height : 250px;'>
+                  <div class='card-body'>
+                    <p class='card-text'>$username: $message</p>
+                      <small class='text-muted'>$created</small>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ";
+              ";
+              }
+              echo "</div>";
+
+              $stmt -> free_result();
+              $stmt -> close();
             }
-            echo "</div>";
+        ?>
+  </div>
 
-            $stmt -> free_result();
-            $stmt -> close();
-          }
-      ?>
-</div>
+  <!-- form for creating a post -->
+  <div class="col-sm-4">
+        <h3>create post</h3>
+          <form method="POST" enctype="multipart/form-data" return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
 
-<!-- form for creating a post -->
-<div class="col-sm-4">
-      <h3>create post</h3>
-        <form method="POST" enctype="multipart/form-data" return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
+            <div class="form-group">
+              <label for="message">message:</label>
+              <input type="text" class="form-control" id="message" name="message">
+              <input type="hidden" name="thread" value="<?php echo $threadID; ?>"/>
+              <input type="hidden" name="user_id" value="<?php echo $user; ?>"/>
+              <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
+            </div>
+            <div class="form-group">
+              <label for="image">image:</label>
+              <input type="file" class="form-control" id="image" name="image">
+            </div>
 
-          <div class="form-group">
-            <label for="message">message:</label>
-            <input type="text" class="form-control" id="message" name="message">
-            <input type="hidden" name="thread" value="<?php echo $threadID; ?>"/>
-            <input type="hidden" name="user_id" value="<?php echo $user; ?>"/>
-          </div>
-          <div class="form-group">
-            <label for="image">image:</label>
-            <input type="file" class="form-control" id="image" name="image">
-          </div>
+            <button class="btn btn-primary" formaction="/forms/createPost.php">Create</button>
+          </form>
+      </div>
 
-          <button class="btn btn-primary" formaction="/forms/createPost.php">Create</button>
-        </form>
-    </div>
+  <?php
 
-<?php
-
-getFooter();
-}
+  getFooter();
+  }
 catch(Exception){
     header("Location: ../error.php");
     exit();

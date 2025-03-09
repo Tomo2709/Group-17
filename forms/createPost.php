@@ -1,11 +1,29 @@
 <?php
+// csrf token check
+$token =$_POST['_token'];
+$temp = $_SESSION['_token'];
+if ($token !== $temp){
+    header("Location: ../error.php");
+    exit();
+}
+
 try{
     $message = $_POST["message"];
     $thread = $_POST["thread"];
     $author = $_POST["user_id"];
     $created = date("Y/m/d");
 
-    // vunerable code - create new post and return to the current thread
+    // check if message is empty
+    if($message === NULL || strlen($message) <= 0){
+        getHeader("petForum");
+        // button to send user back to the page they was previously on
+        echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
+        message cannot be null</div> <a href="../posts.php?thread=' . htmlspecialchars($thread) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
+        
+        exit();
+    }
+
+    // vunerable feature - create new post and return to the current thread
     $targetDir = "../images/";
     $targetFile = $targetDir . basename($_FILES["image"]["name"]);
 

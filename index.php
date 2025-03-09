@@ -1,6 +1,5 @@
 <?php
 getHeader("PetForum");
-
 ?>
 
 <div class="jumbotron text-center">
@@ -51,12 +50,16 @@ getHeader("PetForum");
           if ($stmt = $GLOBALS['database'] -> prepare("SELECT  `threads`.`title`, `users`.`username`, `posts`.`message`, `posts`.`created` FROM `posts` INNER JOIN `threads` ON `posts`.`thread` = `threads`.`thread_id` INNER JOIN `users` ON `posts`.`author` = `users`.`user_id` ORDER BY  `posts`.`post_id` ASC LIMIT 5"))
           {
               $stmt -> execute();
-              $stmt -> bind_result($threadTitle, $author, $message, $created);
+              $stmt -> bind_result($title, $author, $message, $created);
               $stmt -> store_result();
+              
+               // xss filtering
+               $title = htmlspecialchars($title);
+               $username = htmlspecialchars($author);
 
               while ($stmt -> fetch())
               {
-                echo "<p>" . "[".$threadTitle."]" ." ". $author . " : " .  $message . " " . " ". $created . "</p>";
+                echo "<p>" . "[".$title."]" ." ". $author . " : " .  $message . " " . " ". $created . "</p>";
               }
 
               $stmt -> free_result();
