@@ -16,6 +16,7 @@ getHeader("PetForum");
     }
 
    ?></p>
+    <a href="../" class="btn btn-primary">Home</a>
 </div>
 
 <div class="container">

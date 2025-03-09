@@ -48,7 +48,8 @@ $_SESSION['_token'] = bin2hex(random_bytes(16));
         echo "Guest";
       }
 
-      echo '</p> <h1>Board : '. $title . '</div>';
+      echo '</p> <h1>Board : '. $title . '</h1>';
+      echo '<a href="../" class="btn btn-primary">Home</a></div>';
     }
   }
 

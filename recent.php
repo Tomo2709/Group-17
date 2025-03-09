@@ -14,10 +14,11 @@ getHeader("PetForum");
     else
     {
       // Display "Guest" for users who aren't logged in
-      echo "Guest";
+      echo "Guest</p>";
     }
     
-   ?></p>
+   echo '<a href="../" class="btn btn-primary">Home</a>';
+   ?>
 </div>
 
 <div class="container">
@@ -51,7 +52,7 @@ getHeader("PetForum");
               ";
               }
               echo "</div>";
-              
+
             // Free resources and close the statement
             $stmt -> free_result();
             $stmt -> close();

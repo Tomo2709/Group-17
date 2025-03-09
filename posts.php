@@ -51,7 +51,8 @@ $_SESSION['_token'] = bin2hex(random_bytes(16));
       }
 
       // Check if no threads were found with the given ID
-      echo '</p> <h1>Thread : '. $title . '</div>';
+      echo '</p> <h1>Thread : '. $title .'</h1>';
+      echo '<a href="../" class="btn btn-primary">Home</a></div>';
     }
   }
   // if threadID doesnt exist redirect
