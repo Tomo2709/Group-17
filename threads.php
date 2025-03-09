@@ -1,4 +1,8 @@
 <?php
+
+// set user
+$user = $_SESSION['id'];
+
 // generate csrf token
 $_SESSION['_token'] = bin2hex(random_bytes(16));
 
@@ -57,9 +61,6 @@ $_SESSION['_token'] = bin2hex(random_bytes(16));
   $stmt -> free_result();
   $stmt -> close();
 
-
-  // we do not have a user login set up yet
-  $user = 1;
   ?>
 
   <div class="container">

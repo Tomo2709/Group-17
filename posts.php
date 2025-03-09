@@ -1,4 +1,7 @@
 <?php
+// set user
+$user = $_SESSION['id'];
+
 // generate csrf token
 $_SESSION['_token'] = bin2hex(random_bytes(16));
 
@@ -53,10 +56,6 @@ $_SESSION['_token'] = bin2hex(random_bytes(16));
       header("Location: ../error.php");
       exit();
   }
-  // ISSUE: Hardcoded user ID                       ISSUE ISSUE ISSUE ISSUE ISSUE ISSUE ISSUE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // This sets a fixed user ID regardless of who is actually logged in
-  $user = 1;
-
   ?>
 
   <div class="container">
