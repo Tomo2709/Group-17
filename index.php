@@ -85,6 +85,12 @@ getHeader("PetForum");
 
     <!-- log in stuff right here -->
     <div class="col-sm-4">
+      <?php
+        if (isset($_SESSION['SignUpStatus'])) {
+          echo $_SESSION['SignUpStatus'];
+          unset($_SESSION['SignUpStatus']);
+        }
+      ?>
       <h3>Login/signup</h3>
         <form method="POST" onkeydown="return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
 
@@ -103,12 +109,10 @@ getHeader("PetForum");
             <input type="password" class="form-control" id="password" name="password">
           </div>
 
-          <!-- There are several default colours in Bootstrap CSS accessed by calling the class
-               See: https://getbootstrap.com/docs/4.0/utilities/colors/#color -->
-          <button class="btn btn-primary" formaction="">Signup</button>
-          <button class="btn btn-primary" formaction="">Login</button>
-          <button class="btn btn-primary" formaction="">Logout</button>
-          <button class="btn btn-primary" formaction="">Account</button>
+          
+          <button class="btn btn-primary" formaction="/user/signup.php">Signup</button>
+          <button class="btn btn-primary" formaction="/user/login.php">Login</button>
+          <button class="btn btn-primary" formaction="/user/logout.php">Logout</button>
         </form>
     </div>
   </div>
