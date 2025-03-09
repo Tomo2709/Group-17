@@ -52,10 +52,6 @@ getHeader("PetForum");
               $stmt -> execute();
               $stmt -> bind_result($title, $author, $message, $created);
               $stmt -> store_result();
-              
-               // xss filtering
-               $title = htmlspecialchars($title);
-               $username = htmlspecialchars($author);
 
               while ($stmt -> fetch())
               {

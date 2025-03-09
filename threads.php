@@ -37,7 +37,7 @@ try{
         echo "Guest";
       }
 
-      echo '</p> <h1>Board : '. htmlspecialchars($title) . '</div>';
+      echo '</p> <h1>Board : '. $title . '</div>';
     }
   }
 
@@ -65,10 +65,6 @@ try{
               $stmt -> bind_result($threadID, $title, $username, $board, $created);
               $stmt -> store_result();
 
-              // xss filtering
-              $title = htmlspecialchars($title);
-              $username = htmlspecialchars($username);
-              
               while ($stmt -> fetch())
               {
                 echo "<h5><a href='posts.php?thread=$threadID'>title: $title author: $username created: $created</a></h5><br>";

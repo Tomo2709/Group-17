@@ -36,7 +36,7 @@ try{
         echo "Guest";
       }
 
-      echo '</p> <h1>Thread : '. htmlspecialchars($title) . '</div>';
+      echo '</p> <h1>Thread : '. $title . '</div>';
     }
   }
   // if threadID doesnt exist redirect
@@ -58,11 +58,6 @@ try{
               $stmt -> execute();
               $stmt -> bind_result($postID, $title, $username, $created, $image, $message);
               $stmt -> store_result();
-
-              // xss filtering
-              $image = htmlspecialchars($image);
-              $username = htmlspecialchars($username);
-              $message = htmlspecialchars($message);
 
               while ($stmt -> fetch())
               {
