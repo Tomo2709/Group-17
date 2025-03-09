@@ -1,13 +1,11 @@
 <?php
-// Include the header for the webpage
 getHeader("PetForum");
+
 ?>
 
-<!-- Jumbotron Section -->
 <div class="jumbotron text-center">
   <h1>PetForum Homepage</h1>
   <p>Welcome to the PetForum Homepage</p>
-  <!-- relfect currently logged in user, if not logged in show guest -->
   <p>Logged in as: <?php
 
     if (isset($_SESSION['id']))
@@ -17,43 +15,29 @@ getHeader("PetForum");
     else
     {
       echo "Guest";
+      
     }
 
    ?></p>
-   <!-- Search bar that allows users to find threads by title -->
-<div class="search-container">
-    <form action="search.php" method="GET">
-      <input type="text" placeholder="Search For Thread Title..." name="search">
-    </form>
-  </div>
 </div>
-</div>
-
-
 
 <div class="container">
     <div class="row">
     <div class="col-sm-4">
       <h2>Boards</h2>
       <?php
-
-        // Prepare a database query to get top 5 boards, sorted by board_id
-        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `board_id`, `title` FROM `boards` ORDER BY `board_id` ASC LIMIT 5"))
+        // get all boards in ascending order
+        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `board_id`, `title` FROM `boards` ORDER BY `board_id` ASC LIMIT 10"))
           {
-            // Run the query
             $stmt -> execute();
-             // Store the results in variables ($boardID and $title)
             $stmt -> bind_result($boardID, $title);
-            // Get all results
             $stmt -> store_result();
-            
-            // Loop through each board found in the database
+
             while ($stmt -> fetch())
             {
-              // For each board, create a link that goes to threads.php with the board ID
               echo "<h5><a href='threads.php?board=$boardID'>$title</a></h5><br>";
             }
-            // Clean up by freeing the result and closing the statement
+
             $stmt -> free_result();
             $stmt -> close();
           }
@@ -68,12 +52,12 @@ getHeader("PetForum");
           if ($stmt = $GLOBALS['database'] -> prepare("SELECT  `threads`.`title`, `users`.`username`, `posts`.`message`, `posts`.`created` FROM `posts` INNER JOIN `threads` ON `posts`.`thread` = `threads`.`thread_id` INNER JOIN `users` ON `posts`.`author` = `users`.`user_id` ORDER BY  `posts`.`post_id` ASC LIMIT 5"))
           {
               $stmt -> execute();
-              $stmt -> bind_result($title, $author, $message, $created);
+              $stmt -> bind_result($threadTitle, $author, $message, $created);
               $stmt -> store_result();
 
               while ($stmt -> fetch())
               {
-                echo "<p>" . "[".$title."]" ." ". $author . " : " .  $message . " " . " ". $created . "</p>";
+                echo "<p>" . "[".$threadTitle."]" ." ". $author . " : " .  $message . " " . " ". $created . "</p>";
               }
 
               $stmt -> free_result();
@@ -85,6 +69,12 @@ getHeader("PetForum");
 
     <!-- log in stuff right here -->
     <div class="col-sm-4">
+      <?php
+        if (isset($_SESSION['SignUpStatus'])) {
+          echo $_SESSION['SignUpStatus'];
+          unset($_SESSION['SignUpStatus']);
+        }
+      ?>
       <h3>Login/signup</h3>
         <form method="POST" onkeydown="return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
 
@@ -94,7 +84,7 @@ getHeader("PetForum");
           </div>
 
           <div class="form-group">
-            <label for="email">Email address: (not required for login)</label>
+            <label for="email">Email address:</label>
             <input type="email" class="form-control" id="email" name="email">
           </div>
 
@@ -105,10 +95,10 @@ getHeader("PetForum");
 
           <!-- There are several default colours in Bootstrap CSS accessed by calling the class
                See: https://getbootstrap.com/docs/4.0/utilities/colors/#color -->
-          <button class="btn btn-primary" formaction="">Signup</button>
-          <button class="btn btn-primary" formaction="">Login</button>
-          <button class="btn btn-primary" formaction="">Logout</button>
-          <button class="btn btn-primary" formaction="">Account</button>
+          <button class="btn btn-primary" formaction="/user/signup.php">Signup</button>
+          <button class="btn btn-primary" formaction="/user/login.php">Login</button>
+          <button class="btn btn-primary" formaction="/user/logout.php">Logout</button>
+          <!-- <button class="btn btn-primary" formaction="">Account</button> nah, not needed -->
         </form>
     </div>
   </div>
