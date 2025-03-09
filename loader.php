@@ -1,5 +1,8 @@
 <?php
 
+// csp policy for better xss protection
+header("Content-Secruity-Policy: default-src 'self'; script-src 'self' 'nonce-unique'; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';");
+
 session_start();
 
 ini_set('display_errors', 1);
