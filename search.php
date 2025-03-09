@@ -1,11 +1,95 @@
 <?php 
+    $token = $_POST['_token'];
+    $temp = $_SESSION['_token'];
+    if ($token !== $temp){
+       // die(bin2hex($token) . ";" . $temp);
+        header("Location: ../error.php");
+        exit();
+    }
+
     getHeader("PetForum");
 
     // Retrieve user input from the search query
     // Using null coalescing operator to avoid undefined index notice
-    $input = $_GET['search'] ?? '';
+    $input = $_POST['search'] ?? '';
     $searchPattern = "%$input%"; // Format input for SQL LIKE search
 
+    // Jumbotron Section
+    echo '<div class="jumbotron text-center">  
+    <p>Logged in as: ';
+
+    if (isset($_SESSION['id']))
+    {
+      echo $_SESSION['username'] . " (" . $_SESSION['email'] . ")";
+      
+      // If user is logged in and search input is not empty, save it to search history
+      if (!empty($input)) {
+          try {
+              // Insert current search into history
+              $insertQuery = "INSERT INTO `sHistory`(`user`, `input`) VALUES (?, ?)";
+              if ($insertStmt = $database->prepare($insertQuery)) {
+                  $insertStmt->bind_param("is", $_SESSION['id'], $input);
+                  $insertStmt->execute();
+                  $insertStmt->close();
+              }
+          } catch (Exception) {
+              // Silently fail
+              // we don't want search history errors to break the main functionality
+          }
+      }
+    }
+    else
+    {
+      echo "Guest";
+    }
+    # test with <script>alert('Injected!');</script>
+    echo'</p><h6>Search: ' . htmlspecialchars($input) . '</h6></div>';
+
+    // Display Search History for logged-in users
+    if (isset($_SESSION['id'])) {
+        echo '<div class="container mb-4">';
+        echo '<div class="card">';
+        echo '<div class="card-header">Recent Searches</div>';
+        echo '<div class="card-body">';
+        
+        try {
+            // Query to get the last 5 searches for the current user, ordered by most recent first
+            $historyQuery = "SELECT `input` FROM `sHistory` WHERE `user` = ? ORDER BY `search_id` DESC LIMIT 5";
+            
+            if ($historyStmt = $database->prepare($historyQuery)) {
+                $historyStmt->bind_param("i", $_SESSION['id']);
+                
+                if (!$historyStmt->execute()) {
+                    throw new Exception("Error fetching search history");
+                }
+                
+                $historyStmt->bind_result($searchInput);
+                $historyStmt->store_result();
+                
+                if ($historyStmt->num_rows > 0) {
+                    echo '<ul class="list-group list-group-flush">';
+                    while ($historyStmt->fetch()) {
+                        // Display each search term with a link to search for it again
+                        echo '<li class="list-group-item"><a href="?search=' . urlencode($searchInput) . '">' . 
+                             htmlspecialchars($searchInput, ENT_QUOTES) . '</a></li>';
+                    }
+                    echo '</ul>';
+                } else {
+                    echo '<p>No recent searches found.</p>';
+                }
+                
+                $historyStmt->free_result();
+                $historyStmt->close();
+            } else {
+                throw new Exception("Failed to prepare history query");
+            }
+        } catch (Exception $e) {
+            echo '<div class="alert alert-warning">Search history cannot be displayed.</div>';
+        }
+        
+        echo '</div></div></div>'; // Close card and container
+    }
+    
     try {
         // Prepare SQL query to fetch posts matching the search term
         // This query joins three tables: posts, users, and threads

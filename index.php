@@ -26,7 +26,8 @@ getHeader("PetForum");
    ?></p>
    <!-- Search bar that allows users to find threads by title -->
 <div class="search-container">
-    <form action="search.php" method="GET">
+    <form action="search.php" method="POST">
+      <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
       <input type="text" placeholder="Search For Thread Title..." name="search">
     </form>
   </div>

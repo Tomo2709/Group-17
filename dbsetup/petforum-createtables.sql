@@ -1,6 +1,7 @@
 CREATE DATABASE petdb;
 USE petdb;
 
+drop table IF EXISTS sHistory;
 drop table IF EXISTS posts;
 drop table IF EXISTS threads;
 drop table IF EXISTS boards;
@@ -40,6 +41,14 @@ create table posts(
     CONSTRAINT pri_post PRIMARY KEY(post_id),
     CONSTRAINT for_thr FOREIGN KEY(thread) REFERENCES threads(thread_id),
     CONSTRAINT for_authP FOREIGN KEY(author) REFERENCES users(user_id));
+
+create table sHistory(
+	search_id INT NOT NULL AUTO_INCREMENT,
+    user INT NOT NULL,
+    input VARCHAR(255) NOT NULL,
+    CONSTRAINT pri_history PRIMARY KEY(search_id),
+    CONSTRAINT for_user FOREIGN KEY(user) REFERENCES users(user_id));
+
     
 INSERT INTO `users`(`username`, `email`, `password`) VALUES ("test","t@t.t","test");
 

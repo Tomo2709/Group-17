@@ -82,7 +82,7 @@ $_SESSION['_token'] = bin2hex(random_bytes(16));
                 echo "
                 <div class=container>
                 <div class='card mb-4 box-shadow'>
-                  <img class='card-img-top' src='../images/$image' data-holder-rendered='true' style='width: 250px;height : 250px;'>
+                  <a href='../images/$image'><img class='card-img-top' src='../images/$image' data-holder-rendered='true' style='width: 250px;height : 250px;'></a>
                   <div class='card-body'>
                     <p class='card-text'>$username: $message</p>
                       <small class='text-muted'>$created</small>
