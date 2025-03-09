@@ -1,4 +1,5 @@
 <?php
+
 // csrf token check
 $token =$_POST['_token'];
 $temp = $_SESSION['_token'];
@@ -19,6 +20,16 @@ try{
         // button to send user back to the page they was previously on
         echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
         message cannot be null</div> <a href="../posts.php?thread=' . htmlspecialchars($thread) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
+        
+        exit();
+    }
+
+    // users cannot create without logging in
+    if(!isset($_SESSION['id'])){
+        getHeader("petForum");
+        // button to send user back to the page they was previously on
+        echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
+        you need to be signed in to do this action</div> <a href="../posts.php?thread=' . htmlspecialchars($thread) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
         
         exit();
     }
