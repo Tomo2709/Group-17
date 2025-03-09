@@ -1,8 +1,16 @@
 <?php
 
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $username = htmlspecialchars($_POST['username']);
+    $email = htmlspecialchars($_POST['email']);
+    $password = htmlspecialchars($_POST['password']);
+
+    // csrf token 
+    $token =$_POST['_token'];
+    $temp = $_SESSION['_token'];
+    if ($token !== $temp){ 
+        header("Location: ../error.php");
+        exit();
+    }   
 
     try{
     // email verification----------------------------------------------------------------------------------------

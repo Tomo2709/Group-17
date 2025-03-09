@@ -1,4 +1,8 @@
 <?php
+
+// generate csrf token
+$_SESSION['_token'] = bin2hex(random_bytes(16));
+
 // Include the header for the webpage
 getHeader("PetForum");
 ?>
@@ -100,13 +104,17 @@ getHeader("PetForum");
           </div>
 
           <div class="form-group">
-            <label for="email">Email address: (not required for login)</label>
+            <label for="email">Email address:</label>
             <input type="email" class="form-control" id="email" name="email">
           </div>
 
           <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password">
+          </div>
+
+          <div class="form-group">
+            <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
           </div>
 
           
