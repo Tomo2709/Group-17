@@ -19,25 +19,37 @@
         $stmt -> bind_result($uId, $uNam, $mail, $hasPasswrd);
         $stmt -> store_result();
         
+
+
         while ($stmt -> fetch()){
+            $nam = $uNam;
 
-            if (password_verify($password, $hasPasswrd)) {
+            if ($username == $uNam){
+                echo "Yes it is the same";
 
-                $_SESSION['id'] = $uId;
-                $_SESSION['username'] = $uNam;
-                $_SESSION['email'] = $mail;
+                if (password_verify($password, $hasPasswrd)) { // Checks if the password is correct
 
-                $_SESSION['SingUpStatus'] = "All Good!";
+                    $_SESSION['id'] = $uId;
+                    $_SESSION['username'] = $uNam;
+                    $_SESSION['email'] = $mail;
 
-            } else {
-                $_SESSION['SignUpStatus'] = "Wrong Password!";
+                    $_SESSION['SignUpStatus'] = "All Good!";
 
+                } else {
+                    $_SESSION['SignUpStatus'] = "Wrong Password!";
+
+                }
+
+                header("Location: " . $GLOBALS['home']);
+                $stmt ->close();
+                die();
             }
-        }
-        
-    }
 
-    header("Location: " . $GLOBALS['home']);
-    $stmt ->close();
+        } 
+        
+        $_SESSION['SignUpStatus'] = "Incorrect email or username!";
+        header("Location: " . $GLOBALS['home']);
+        $stmt ->close();
+    } 
 
 ?>

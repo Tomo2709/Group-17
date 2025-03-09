@@ -95,33 +95,51 @@ getHeader("PetForum");
           echo $_SESSION['SignUpStatus'];
           unset($_SESSION['SignUpStatus']);
         }
+
+        if (isset($_SESSION['id'])){
+          echo "<h3>Account Actions</h3>";
+
+        }
+        else {
+          echo "<h3>Login/signup</h3>";
+        }
       ?>
-      <h3>Login/signup</h3>
+
         <form method="POST" onkeydown="return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
 
-          <div class="form-group">
+          <?php
+          if (isset($_SESSION['id'])){
+            echo'<button class="btn btn-primary" formaction="/user/logout.php">Logout</button>';
+
+          }
+          else{
+
+            echo'<div class="form-group">
             <label for="username">Username:</label>
             <input type="username" class="form-control" id="username" name="username">
-          </div>
+            </div>';
 
-          <div class="form-group">
+            echo'<div class="form-group">
             <label for="email">Email address:</label>
             <input type="email" class="form-control" id="email" name="email">
-          </div>
+            </div>';
 
-          <div class="form-group">
+            echo '<div class="form-group">
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password">
-          </div>
+            </div>';
+
+            echo'<button class="btn btn-primary" formaction="/user/signup.php">Signup</button>';
+            echo'<button class="btn btn-primary" formaction="/user/login.php">Login</button>';
+          
+          }
+          ?>
 
           <div class="form-group">
             <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
           </div>
 
-          
-          <button class="btn btn-primary" formaction="/user/signup.php">Signup</button>
-          <button class="btn btn-primary" formaction="/user/login.php">Login</button>
-          <button class="btn btn-primary" formaction="/user/logout.php">Logout</button>
+
         </form>
     </div>
   </div>
