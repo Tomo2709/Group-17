@@ -9,7 +9,7 @@ getHeader("PetForum");
 </div>
 
 <div class="d-flex justify-content-center align-items-center">
-    <img src="../images/moai.webp" alt="moai" style="width:300px;height:300px">
+    <img src="../images/moai.webp" alt="🗿" style="width:300px;height:300px">
 </div>
 
 

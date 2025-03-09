@@ -1,10 +1,13 @@
 <?php
+// Include the header for the webpage
 getHeader("PetForum");
 ?>
 
+<!-- Jumbotron Section -->
 <div class="jumbotron text-center">
   <h1>PetForum Homepage</h1>
   <p>Welcome to the PetForum Homepage</p>
+  <!-- relfect currently logged in user, if not logged in show guest -->
   <p>Logged in as: <?php
 
     if (isset($_SESSION['id']))
@@ -17,25 +20,40 @@ getHeader("PetForum");
     }
 
    ?></p>
+   <!-- Search bar that allows users to find threads by title -->
+<div class="search-container">
+    <form action="search.php" method="GET">
+      <input type="text" placeholder="Search For Thread Title..." name="search">
+    </form>
+  </div>
 </div>
+</div>
+
+
 
 <div class="container">
     <div class="row">
     <div class="col-sm-4">
       <h2>Boards</h2>
       <?php
-        // get all boards in ascending order
-        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `board_id`, `title` FROM `boards` ORDER BY `board_id` ASC LIMIT 10"))
-          {
-            $stmt -> execute();
-            $stmt -> bind_result($boardID, $title);
-            $stmt -> store_result();
 
+        // Prepare a database query to get top 5 boards, sorted by board_id
+        if ($stmt = $GLOBALS['database'] -> prepare("SELECT `board_id`, `title` FROM `boards` ORDER BY `board_id` ASC LIMIT 5"))
+          {
+            // Run the query
+            $stmt -> execute();
+             // Store the results in variables ($boardID and $title)
+            $stmt -> bind_result($boardID, $title);
+            // Get all results
+            $stmt -> store_result();
+            
+            // Loop through each board found in the database
             while ($stmt -> fetch())
             {
+              // For each board, create a link that goes to threads.php with the board ID
               echo "<h5><a href='threads.php?board=$boardID'>$title</a></h5><br>";
             }
-
+            // Clean up by freeing the result and closing the statement
             $stmt -> free_result();
             $stmt -> close();
           }

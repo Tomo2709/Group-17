@@ -1,22 +1,44 @@
 <?php
+/**
+ * Core loader file for PetForum application
+ * Initialises database connection, session, and provides layout functions
+**/
 
 // csp policy for better xss protection
 header("Content-Secruity-Policy: default-src 'self'; script-src 'self' 'nonce-unique'; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';");
 
-session_start();
+// Try to start the session to maintain user data across pages
+try {
+  session_start();
+} catch (Exception $e) {
+  header("Location: ../error.php");
+  exit();
+}
 
-ini_set('display_errors', 1);
+/* Database connection with error handling */
+try {
+  /* Credentials for database */
+  $GLOBALS['ip'] = "localhost";
+  $GLOBALS['user'] = 'root';
+  $GLOBALS['password'] = ''; // TODO: Use a secure password in production
+  
+  // Attempt database connection
+  $GLOBALS['database'] = new mysqli($GLOBALS['ip'], $GLOBALS['user'], $GLOBALS['password'], 'petdb');
+  
+  // Check if connection was successful
+  if ($GLOBALS['database']->connect_error) {
+      throw new Exception("Database connection failed");
+  }
+} catch (Exception $e) {
+  header("Location: ../error.php");
+  exit();
+}
 
-/* Credentials for database, currently without password */
-$GLOBALS['ip'] = "localhost";
-$GLOBALS['user'] = 'root';
-$GLOBALS['password'] = '';
-$GLOBALS['database'] = new mysqli($GLOBALS['ip'], $GLOBALS['user'], $GLOBALS['password'], 'petdb');
-
-/* Server variables */
+/* Server variables storing important information about where the website is located */
 $GLOBALS['root'] = $_SERVER['DOCUMENT_ROOT'];
 $GLOBALS['home'] = 'http://' . $_SERVER['SERVER_NAME'];
 
+// This function creates the top part of every webpage, including the title and necessary styling tools
 function getHeader($title)
 {
   ?>
@@ -34,6 +56,7 @@ function getHeader($title)
   <?php
 }
 
+// This function creates the bottom part of every webpage, simply closing the page properly
 function getFooter()
 {
   echo "</body>";

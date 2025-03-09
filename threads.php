@@ -2,7 +2,6 @@
 // generate csrf token
 $_SESSION['_token'] = bin2hex(random_bytes(16));
 
-try{
   getHeader("PetForum");
 
   // sanatize html characters
@@ -19,21 +18,28 @@ try{
 
   // check to see if the ID exists
   if ($stmt = $GLOBALS['database'] ->prepare("SELECT * FROM `boards` WHERE `board_id`=?")){
+    // Prepare the SQL statement to prevent SQL injection
     $stmt ->bind_param("s", $boardID);
+    // Execute the prepared statement
     $stmt ->execute();
+
+    // Bind the result columns to variables
     $stmt ->bind_result($boardID, $title);
+    // Store all results in memory
     $stmt ->store_result();
+
+    // Fetch and display the board information
     while ($stmt -> fetch()){
       echo '<div class="jumbotron text-center">
       <h1>Threads</h1>
       <p>Logged in as: ';
-
+      // Check if a user is logged in
       if (isset($_SESSION['id']))
       {
         echo $_SESSION['username'] . " (" . $_SESSION['email'] . ")";
       }
       else
-      {
+      {// Otherwise show as guest
         echo "Guest";
       }
 
@@ -47,6 +53,7 @@ try{
       exit();
   }
 
+  // Clean up database resources
   $stmt -> free_result();
   $stmt -> close();
 
@@ -60,16 +67,23 @@ try{
           // get all threads in ascending of date created
           if ($stmt = $GLOBALS['database'] -> prepare("SELECT `thread_id`, `threads`.`title`, `users`.`username`, `boards`.`title`, `created` FROM `threads` INNER JOIN `users` ON `author` = `users`.`user_id` INNER JOIN `boards` ON `board`=`boards`.`board_id` WHERE `board` = ? ORDER BY `created`" ))
             {
+              // Query the database for all threads in this board, ordered by creation date
               $stmt -> bind_param("s", $boardID);
+              // Execute the query
               $stmt -> execute();
+              // Bind the result columns to variables
               $stmt -> bind_result($threadID, $title, $username, $board, $created);
+              // Store all results in memory
               $stmt -> store_result();
 
+              // Loop through each thread and display it as a link // Loop through each thread and display it as a link
               while ($stmt -> fetch())
               {
+                // Create a link to each thread showing its title, author and creation date
                 echo "<h5><a href='posts.php?thread=$threadID'>title: $title author: $username created: $created</a></h5><br>";
               }
 
+              // Clean up database resources
               $stmt -> free_result();
               $stmt -> close();
             }
@@ -95,10 +109,5 @@ try{
   <?php
 
   getFooter();
-          }
-catch(Exception){
-  header("Location: ../error.php");
-  exit();
-}
 
 ?>
