@@ -17,7 +17,7 @@ getHeader("PetForum");
       echo "Guest</p>";
     }
     
-   echo '<a href="../" class="btn btn-primary">Home</a>';
+   echo '<div><a href="../" class="btn btn-primary">Home</a></div>';
    ?>
 </div>
 
