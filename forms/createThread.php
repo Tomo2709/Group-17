@@ -1,9 +1,16 @@
 <?php
 
 // csrf token check
-$token =$_POST['_token'];
-$temp = $_SESSION['_token'];
-if ($token !== $temp){ 
+if(isset($_POST['_token']) && (isset($_SESSION['_token']))){
+  $token =$_POST['_token'];
+  $temp = $_SESSION['_token'];
+  if ($token !== $temp){ 
+    header("Location: ../error.php");
+    exit();
+  }
+}
+
+if(!isset($_POST['_token']) || (!isset($_SESSION['_token']))){
   header("Location: ../error.php");
   exit();
 }
@@ -14,23 +21,23 @@ try{
   $author = $_POST["user_id"];
   $created = date("Y/m/d");
 
-  // check if title is empty
-  if($title === NULL || strlen($title) <= 0){
-    getHeader("petForum");
-    // button to send user back to the page they was previously on
-    echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
-    title cannot be null</div> <a href="../threads.php?board='.htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
-    exit();
-  }
-
-  // users cannot create without logging in
-  if(!isset($_SESSION['id'])){
-    getHeader("petForum");
-    // button to send user back to the page they was previously on
-    echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
-    you need to be signed in to do this action</div> <a href="../threads.php?board=' . htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
-    exit();
-  }
+    // check if title is empty
+    if($title === NULL || strlen($title) <= 0){
+      getHeader("petForum");
+      // button to send user back to the page they was previously on
+      echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
+      title cannot be null</div> <a href="../threads.php?board='.htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
+      exit();
+    }
+  
+    // users cannot create without logging in
+    if(!isset($_SESSION['id'])){
+      getHeader("petForum");
+      // button to send user back to the page they was previously on
+      echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
+      you need to be signed in to do this action</div> <a href="../threads.php?board=' . htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
+      exit();
+    }
 
   // xss patch
   $title = htmlspecialchars($title);

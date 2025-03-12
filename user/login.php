@@ -1,16 +1,25 @@
 <?php
 
+    // csrf token check
+    if(isset($_POST['_token']) && (isset($_SESSION['_token']))){
+        $token =$_POST['_token'];
+        $temp = $_SESSION['_token'];
+        if ($token !== $temp){ 
+        header("Location: ../error.php");
+        exit();
+        }
+    }
+    
+    if(!isset($_POST['_token']) || (!isset($_SESSION['_token']))){
+        header("Location: ../error.php");
+        exit();
+    }
+  
     $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);
     $password = htmlspecialchars($_POST['password']);
 
-    // csrf token 
-    $token =$_POST['_token'];
-    $temp = $_SESSION['_token'];
-    if ($token !== $temp){ 
-        header("Location: ../error.php");
-        exit();
-    }  
+
 
     if ($stmt = $GLOBALS['database'] -> prepare("SELECT user_id, username, email, password FROM users WHERE BINARY username = ? AND email = ?")) {
                 
