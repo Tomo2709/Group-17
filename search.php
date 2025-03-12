@@ -57,7 +57,8 @@
       echo "Guest";
     }
     # test with <script>alert('Injected!');</script>
-    echo'</p><h6>Search: ' . htmlspecialchars($input) . '</h6></div>';
+    echo'</p><h6>Search: ' . htmlspecialchars($input) . '</h6>';
+    echo '<a href="../" class="btn btn-primary">Home</a></div></div>';
 
     // Display Search History for logged-in users
     if (isset($_SESSION['id'])) {
