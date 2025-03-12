@@ -10,6 +10,12 @@ $_SESSION['_token'] = bin2hex(random_bytes(16));
 
   getHeader("PetForum");
 
+  // isset check
+  if(!isset($_GET["thread"])){
+    header("Location: ../error.php");
+    exit();
+  }
+
   // sanatize user input
   $threadID = htmlspecialchars($_GET["thread"]);
 

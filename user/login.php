@@ -14,6 +14,14 @@
         header("Location: ../error.php");
         exit();
     }
+
+    // ensure everything is set
+    if((!isset($_POST["username"])) || 
+    (!isset($_POST["email"])) ||
+    (!isset($_POST["password"]))){
+        header("Location: ../error.php");
+        exit();
+    }
   
     $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);

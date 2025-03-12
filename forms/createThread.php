@@ -16,6 +16,15 @@ if(!isset($_POST['_token']) || (!isset($_SESSION['_token']))){
 }
 
 try{
+  
+  // ensure everything is set
+  if((!isset($_POST["title"])) || 
+  (!isset($_POST["board"])) ||
+  (!isset($_POST["user_id"]))){
+    header("Location: ../error.php");
+    exit();
+  }
+
   $title = $_POST["title"];
   $board = $_POST["board"];
   $author = $_POST["user_id"];

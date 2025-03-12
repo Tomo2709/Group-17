@@ -8,6 +8,12 @@ if(isset($_SESSION['id'])){
 $_SESSION['_token'] = bin2hex(random_bytes(16));
 
   getHeader("PetForum");
+  
+  // isset check
+  if(!isset($_GET["board"])){
+    header("Location: ../error.php");
+    exit();
+  }
 
   // sanatize html characters
   $boardID = htmlspecialchars($_GET["board"]);

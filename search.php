@@ -17,6 +17,12 @@
 
     getHeader("PetForum");
 
+    // ensure everything is set
+    if(!isset($_POST["search"])){
+        header("Location: ../error.php");
+        exit();
+    }
+
     // Retrieve user input from the search query
     // Using null coalescing operator to avoid undefined index notice
     $input = $_POST['search'] ?? '';
