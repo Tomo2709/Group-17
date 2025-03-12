@@ -24,7 +24,7 @@ try{
         header("Location: ../error.php");
         exit();
     }
-    
+
     $message = $_POST["message"];
     $thread = $_POST["thread"];
     $author = $_POST["user_id"];
@@ -50,7 +50,7 @@ try{
         exit();
     }
 
-    // vunerable feature - create new post and return to the current thread
+    // set image directory
     $targetDir = "../images/";
     $targetFile = $targetDir . basename($_FILES["image"]["name"]);
 
