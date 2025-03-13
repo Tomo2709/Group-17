@@ -1,8 +1,5 @@
 <?php
 
-// generate csrf token
-
-
 // Include the header for the webpage
 getHeader("PetForum");
 ?>
@@ -23,86 +20,87 @@ getHeader("PetForum");
       echo "Guest";
     }
 
-   ?></p>
-   <!-- Search bar that allows users to find threads by title -->
-<div class="search-container">
+  ?></p>
+  <!-- Search bar that allows users to find threads by title -->
+
+  <div class="search-container">
     <form action="search.php" method="POST">
+      <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
       <input type="text" placeholder="Search For Thread Title..." name="search">
     </form>
   </div>
-</div>
 </div>
 
 
 
 <div class="container">
-    <div class="row">
+  <div class="row">
     <div class="col-sm-4">
       <h2>Boards</h2>
       <?php
 
         // Prepare a database query to get top 5 boards, sorted by board_id
         if ($stmt = $GLOBALS['database'] -> prepare("SELECT `board_id`, `title` FROM `boards` ORDER BY `board_id` ASC LIMIT 5"))
+        {
+          // Run the query
+          $stmt -> execute();
+          // Store the results in variables ($boardID and $title)
+          $stmt -> bind_result($boardID, $title);
+          // Get all results
+          $stmt -> store_result();
+          
+          // Loop through each board found in the database
+          while ($stmt -> fetch())
           {
-            // Run the query
-            $stmt -> execute();
-             // Store the results in variables ($boardID and $title)
-            $stmt -> bind_result($boardID, $title);
-            // Get all results
-            $stmt -> store_result();
-            
-            // Loop through each board found in the database
-            while ($stmt -> fetch())
-            {
-              // For each board, create a link that goes to threads.php with the board ID
-              echo "<h5><a href='threads.php?board=$boardID'>$title</a></h5><br>";
-            }
-            // Clean up by freeing the result and closing the statement
-            $stmt -> free_result();
-            $stmt -> close();
+            // For each board, create a link that goes to threads.php with the board ID
+            echo "<h5><a href='threads.php?board=$boardID'>$title</a></h5><br>";
           }
+          // Clean up by freeing the result and closing the statement
+          $stmt -> free_result();
+          $stmt -> close();
+        }
       ?>
       <a href="boards.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all Boards</a>
       </div>
 
-    <div class="col-sm-4">
-      <h3>Recent activity</h3>
+      <div class="col-sm-4">
+        <h3>Recent activity</h3>
         <?php
           // get recent posts order by post_id
           if ($stmt = $GLOBALS['database'] -> prepare("SELECT  `threads`.`title`, `users`.`username`, `posts`.`message`, `posts`.`created` FROM `posts` INNER JOIN `threads` ON `posts`.`thread` = `threads`.`thread_id` INNER JOIN `users` ON `posts`.`author` = `users`.`user_id` ORDER BY  `posts`.`post_id` ASC LIMIT 5"))
           {
-              $stmt -> execute();
-              $stmt -> bind_result($title, $author, $message, $created);
-              $stmt -> store_result();
+            $stmt -> execute();
+            $stmt -> bind_result($title, $author, $message, $created);
+            $stmt -> store_result();
 
-              while ($stmt -> fetch())
-              {
-                echo "<p>" . "[".$title."]" ." ". $author . " : " .  $message . " " . " ". $created . "</p>";
-              }
+            while ($stmt -> fetch())
+            {
+              echo "<p>" . "[".$title."]" ." ". $author . " : " .  $message . " " . " ". $created . "</p>";
+            }
 
-              $stmt -> free_result();
-              $stmt -> close();
+            $stmt -> free_result();
+            $stmt -> close();
           }
         ?>
-      <a href="recent.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all recent posts</a>
-    </div>
+        <a href="recent.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">View all recent posts</a>
+      </div>
 
-    <!-- log in stuff right here -->
-    <div class="col-sm-4">
-      <?php
-        if (isset($_SESSION['SignUpStatus'])) {
-          echo $_SESSION['SignUpStatus'];
-          unset($_SESSION['SignUpStatus']);
-        }
+      <!-- log in stuff right here -->
+      <div class="col-sm-4">
+        <?php
+          if (isset($_SESSION['SignUpStatus'])) {
+            echo $_SESSION['SignUpStatus'];
+            unset($_SESSION['SignUpStatus']);
+          }
 
-        if (isset($_SESSION['id'])){
-          echo "<h3>Account Actions</h3>";
+          if (isset($_SESSION['id'])){
+            echo "<h3>Account Actions</h3>";
 
-        }
-        else {
-          echo "<h3>Login/signup</h3>";
-        }
-      ?>
+          }
+          else {
+            echo "<h3>Login/signup</h3>";
+          }
+        ?>
 
         <form method="POST" onkeydown="return event.key != 'Enter';"> <!-- Prevents submitting form on [ENTER] -->
 
@@ -135,14 +133,13 @@ getHeader("PetForum");
           ?>
 
         </form>
+      </div>
     </div>
   </div>
 </div>
-</div>
-
 
 <?php
 
-getFooter();
+  getFooter();
 
 ?>

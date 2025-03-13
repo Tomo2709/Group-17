@@ -1,19 +1,18 @@
 <?php
+  try{
 
-try{
+    // ensure everything is set
+    if((!isset($_POST["title"])) || 
+    (!isset($_POST["board"])) ||
+    (!isset($_POST["user_id"]))){
+      header("Location: ../error.php");
+      exit();
+    }
 
-  // ensure everything is set
-  if((!isset($_POST["title"])) || 
-  (!isset($_POST["board"])) ||
-  (!isset($_POST["user_id"]))){
-    header("Location: ../error.php");
-    exit();
-  }
-
-  $title = $_POST["title"];
-  $board = $_POST["board"];
-  $author = $_POST["user_id"];
-  $created = date("Y/m/d");
+    $title = $_POST["title"];
+    $board = $_POST["board"];
+    $author = $_POST["user_id"];
+    $created = date("Y/m/d");
 
     // check if title is empty
     if($title === NULL || strlen($title) <= 0){
@@ -23,7 +22,7 @@ try{
       title cannot be null</div> <a href="../threads.php?board='.htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
       exit();
     }
-  
+    
     // users cannot create without logging in
     if(!isset($_SESSION['id'])){
       getHeader("petForum");
@@ -33,41 +32,40 @@ try{
       exit();
     }
 
-  // xss patch
-  $title = htmlspecialchars($title);
+    // xss patch
+    $title = htmlspecialchars($title);
 
 
-  // create new thread
-  if ($stmt = $GLOBALS['database'] -> prepare("INSERT INTO `threads` (`title`, `board`, `author`, `created`) VALUES (?, ?, ?, ?)"))
-  {
+    // create new thread
+    if ($stmt = $GLOBALS['database'] -> prepare("INSERT INTO `threads` (`title`, `board`, `author`, `created`) VALUES (?, ?, ?, ?)"))
+    {
       $stmt -> bind_param("ssss", $title, $board, $author, $created);
       $stmt -> execute();
       $last_id = $stmt -> insert_id; 
       $stmt -> close();
 
+    }
 
+    // find the thread just created and redirect user into it
+    if ($stmt = $GLOBALS['database'] -> prepare("SELECT MAX(`thread_id`) FROM `threads`" ))
+    {
+      $stmt -> execute();
+      $stmt -> bind_result($threadID);
+      $stmt -> store_result();
+      while ($stmt -> fetch())
+      {
+          header("Location: ../posts.php?thread=$threadID");
+      }
+      $stmt -> free_result();
+      $stmt -> close();
+
+    }
 
   }
-  // find the thread just created and redirect user into it
-  if ($stmt = $GLOBALS['database'] -> prepare("SELECT MAX(`thread_id`) FROM `threads`" ))
-            {
-              $stmt -> execute();
-              $stmt -> bind_result($threadID);
-              $stmt -> store_result();
-              while ($stmt -> fetch())
-              {
-                  header("Location: ../posts.php?thread=$threadID");
-              }
-              $stmt -> free_result();
-              $stmt -> close();
+  catch(Exception){
+    header("Location: ../error.php");
+    exit();
 
-            }
-
-}
-catch(Exception){
-  header("Location: ../error.php");
-  exit();
-
-}
+  }
 ?>
 
