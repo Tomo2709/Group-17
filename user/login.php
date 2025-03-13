@@ -28,7 +28,6 @@
             $nam = $uNam;
 
             if ($username == $uNam){
-                echo "Yes it is the same";
 
                 if (password_verify($password, $hasPasswrd)) { // Checks if the password is correct
 
