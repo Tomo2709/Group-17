@@ -49,13 +49,9 @@ create table sHistory(
     CONSTRAINT pri_history PRIMARY KEY(search_id),
     CONSTRAINT for_user FOREIGN KEY(user) REFERENCES users(user_id));
 
-    
-INSERT INTO `users`(`username`, `email`, `password`) VALUES ("test","t@t.t","test");
-
 INSERT INTO `boards`(`title`) VALUES ("cat"),("dog"),("hamster"),("fish"),("snake"),("lizard");
 
-INSERT INTO `threads`(`title`,`board`,`author`,`created`) VALUES ("this is about cats", 1, 1, "2025-02-26");
 
-INSERT INTO `posts`(`thread`,`author`,`created`,`message`) VALUES (1,1,"2025-02-26","CAT!");
+
 
 
