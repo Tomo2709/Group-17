@@ -44,14 +44,14 @@
 
         }
 
-        if (preg_match("/[^A-Za-z0-9\_\.-!$\?\^%#~@]/", $password)){ // Flags any html related character in this space
+        if (preg_match("/[^A-Za-z0-9\_\.-!$\?\^%#~@]/", $email)){ // Flags any html related character in this space
             $_SESSION['SignUpStatus'] = "Invalid characters found, please remove.";
             header("Location: " . $GLOBALS['home']);
             die();    
 
         }
 
-        // username check [Nothing here for unprotected ver]---------------------------------------------------------
+        // username check ---------------------------------------------------------
 
         if (strlen($username) < 1 || strlen($username) > 100){
             $_SESSION['SignUpStatus'] = "Your username is either too long or too short!";
@@ -60,7 +60,7 @@
 
         }
 
-        if (preg_match("/[^A-Za-z0-9\-_!$\?\^%#~]/", $password)){ // Flags any html related character in this space
+        if (preg_match("/[^A-Za-z0-9\-_!$\?\^%#~]/", $username)){ // Flags any html related character in this space
             $_SESSION['SignUpStatus'] = "Invalid characters found, please remove.";
             header("Location: " . $GLOBALS['home']);
             die();    
