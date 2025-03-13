@@ -104,7 +104,6 @@
           <input type="text" class="form-control" id="title" name="title">
           <input type="hidden" name="board" value="<?php echo $boardID; ?>"/>
           <input type="hidden" name="user_id" value="<?php echo $user; ?>"/>
-          <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
         </div>
 
         <button class="btn btn-primary" formaction="/forms/createThread.php">Create</button>

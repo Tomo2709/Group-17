@@ -113,7 +113,6 @@ if($stmt-> num_rows == 0){
       <input type="text" class="form-control" id="message" name="message">
       <input type="hidden" name="thread" value="<?php echo $threadID; ?>"/>
       <input type="hidden" name="user_id" value="<?php echo $user; ?>"/>
-      <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"/>
     </div>
     <div class="form-group">
       <label for="image">image:</label>
