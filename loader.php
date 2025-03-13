@@ -27,7 +27,7 @@ try {
   
   // Check if connection was successful
   if ($GLOBALS['database']->connect_error) {
-      throw new Exception("Database connection failed");
+    throw new Exception("Database connection failed");
   }
 } catch (Exception $e) {
   header("Location: ../error.php");
