@@ -5,8 +5,8 @@ if(isset($_SESSION['id'])){
 }
 
 
-// generate csrf token
-$_SESSION['_token'] = bin2hex(random_bytes(16));
+
+
 
   getHeader("PetForum");
 

@@ -1,7 +1,7 @@
 <?php
 
 // generate csrf token
-$_SESSION['_token'] = bin2hex(random_bytes(16));
+
 
 // Include the header for the webpage
 getHeader("PetForum");

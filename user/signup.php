@@ -1,28 +1,5 @@
 <?php
 
-    // csrf token check
-    if(isset($_POST['_token']) && (isset($_SESSION['_token']))){
-        $token =$_POST['_token'];
-        $temp = $_SESSION['_token'];
-        if ($token !== $temp){ 
-        header("Location: ../error.php");
-        exit();
-        }
-    }
-        
-    if(!isset($_POST['_token']) || (!isset($_SESSION['_token']))){
-        header("Location: ../error.php");
-        exit();
-    }
-
-    // ensure everything is set
-    if((!isset($_POST["username"])) || 
-    (!isset($_POST["email"])) ||
-    (!isset($_POST["password"]))){
-        header("Location: ../error.php");
-        exit();
-    }
-      
 
     $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);
