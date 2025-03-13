@@ -73,7 +73,6 @@
                         // Display each search term with a link to search for it again
                         echo '<li class="list-group-item">
                         <form method="post" action="search.php">
-                            <input type="hidden" name="_token" value="' . $_SESSION['_token'] . '">
                             <input type="hidden" name="search" value="' . htmlspecialchars($searchInput) . '">
                             <button type="submit" class="btn btn-link p-0 text-decoration-none">' . htmlspecialchars($searchInput) . '</button>
                         </form>
