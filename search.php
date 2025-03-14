@@ -131,6 +131,7 @@
             } else {
                 // Fetch and display results
                 while ($stmt->fetch()) {
+                    // sourced from: https://getbootstrap.com/docs/4.0/examples/album/
                     echo "
                     <div class='card mb-4 box-shadow'>
                         <img class='card-img-top' src='../images/" . htmlspecialchars($image, ENT_QUOTES) . "' 

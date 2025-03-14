@@ -39,6 +39,7 @@ getHeader("PetForum");
       {
         // Output HTML for each post with the post details
         // Each post is displayed as a card with the image, username, message, and timestamp
+        // sourced from: https://getbootstrap.com/docs/4.0/examples/album/
         echo "
         <div class=container>
         <div class='card mb-4 box-shadow'>

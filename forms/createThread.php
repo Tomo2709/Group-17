@@ -18,6 +18,7 @@
     if($title === NULL || strlen($title) <= 0){
       getHeader("petForum");
       // button to send user back to the page they was previously on
+      // sourced from: https://getbootstrap.com/docs/4.0/components/buttons/
       echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
       title cannot be null</div> <a href="../threads.php?board='.htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
       exit();
@@ -27,6 +28,7 @@
     if(!isset($_SESSION['id'])){
       getHeader("petForum");
       // button to send user back to the page they was previously on
+      // sourced from: https://getbootstrap.com/docs/4.0/components/buttons/
       echo '<div class="jumbotron text-center"><div class="alert alert-primary" role="alert">
       you need to be signed in to do this action</div> <a href="../threads.php?board=' . htmlspecialchars($board) .'"'. 'class="btn btn-primary">Try again</a></div></div>';
       exit();

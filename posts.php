@@ -83,6 +83,7 @@ if($stmt-> num_rows == 0){
       while ($stmt -> fetch())
       // Output HTML for each post with the post details
       {
+        // sourced from: https://getbootstrap.com/docs/4.0/examples/album/
         echo "
         <div class=container>
         <div class='card mb-4 box-shadow'>
